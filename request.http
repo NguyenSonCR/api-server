@@ -1,0 +1,112 @@
+POST http://localhost:5000/api/admin/auth/register
+Content-Type: application/json
+
+{
+    "username": "binh",
+    "fullName": "Nhật Bình",
+    "password": "12345",
+    "img": "https://img.thuthuat123.com/uploads/2019/07/12/hinh-anh-thien-nhien-cho-man-hinh-window_085325853.jpg"
+}
+
+###
+POST http://localhost:5000/api/admin/auth/login
+Content-Type: application/json
+
+{
+    "username": "binh",
+    "password": "12345"
+}
+
+###
+
+POST http://localhost:5000/api/admin/products/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzI5ZjM3YjQ5ZTIzNjQ2MDc1YWMxMzgiLCJpYXQiOjE2NjQyMDkwMzAsImV4cCI6MTY2NDIwOTA0MH0.di93q98SlgSWiqnopVtIqQggmodP_3tCbERBYDAt4zY
+
+{
+    "img": "http://noloce",
+    "description": "San pham 5",
+    "price_old": "120",
+    "price_current": "100",
+    "brand": "Chanel",
+    "origin_name": "Dior",
+    "sale_off_percent": "20%" ,
+    "sale_off_lable": "GIẢM",
+    "product_id": "12Ư1e", 
+    "bought": false
+}
+
+###
+GET http://localhost:5000/api/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmMxMGUwYTljZTI5NDlkNjVhNmQ4YjkiLCJpYXQiOjE2NTY4MjAzNTl9.jPVpY0A7yv6-crfxBnJK4LhvTgPMgLbHPoBrbl2FVCk
+
+
+
+###
+GET http://localhost:5000/api/products/nuoc-hoa-chanel
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmMxMGUwYTljZTI5NDlkNjVhNmQ4YjkiLCJpYXQiOjE2NTY4MjAzNTl9.jPVpY0A7yv6-crfxBnJK4LhvTgPMgLbHPoBrbl2FVCk
+
+###
+PUT http://localhost:5000/api/products/change/dior
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmMxMGUwYTljZTI5NDlkNjVhNmQ4YjkiLCJpYXQiOjE2NTY4MjAzNTl9.jPVpY0A7yv6-crfxBnJK4LhvTgPMgLbHPoBrbl2FVCk
+
+{
+    "img": "http://noloce",
+    "description": "San pham 2",
+    "price_old": "120",
+    "price_current": "100",
+    "brand": "Dior",
+    "origin_name": "Dior",
+    "sale_off_percent": "20" ,
+    "sale_off_lable": "12",
+    "product_id": "1", 
+    "bought": false
+}
+
+
+###
+GET http://localhost:5000/api/search
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmMxMGUwYTljZTI5NDlkNjVhNmQ4YjkiLCJpYXQiOjE2NTY4MjAzNTl9.jPVpY0A7yv6-crfxBnJK4LhvTgPMgLbHPoBrbl2FVCk
+
+{
+    "product_id": "13"
+}
+
+
+###
+DELETE  http://localhost:5000/api/cart/nhat
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmMxMGUwYTljZTI5NDlkNjVhNmQ4YjkiLCJpYXQiOjE2NTY4MjAzNTl9.jPVpY0A7yv6-crfxBnJK4LhvTgPMgLbHPoBrbl2FVCk
+
+
+###
+POST http://localhost:5000/api/posts/new
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmMxMGUwYTljZTI5NDlkNjVhNmQ4YjkiLCJpYXQiOjE2NTY4MjAzNTl9.jPVpY0A7yv6-crfxBnJK4LhvTgPMgLbHPoBrbl2FVCk
+
+{
+    "title": "Nước hoa chanel",
+    "header": "Sản phẩm dành cho mùa hè",
+    "content": "Nước hoa đặc biệt dành cho phái nam",
+    "img": "https://images.squarespace-cdn.com/content/v1/53883795e4b016c956b8d243/1556180376617-AV12DX2A2O5DKFW8L3C9/30e80e78394229.5ca3ab3a573ab.jpg?format=1000w"
+}
+
+###
+POST http://localhost:5000/api/users/new
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmQzZTgwNDdiMzAxOGUxNTliY2JjMjIiLCJpYXQiOjE2NTgwNTYwNDl9.T8g5WN6rLbPOSiBtarvpBPlgjQdgBjHOyMwniSe5jV8
+
+{
+    "username": "binh",
+    "address": "cam ranh",
+    "phonenumber": "0795121295",
+    "facebook": "nhat binh"
+}
+
+###
+GET http://localhost:5000/api/posts/chance
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmQzZTgwNDdiMzAxOGUxNTliY2JjMjIiLCJpYXQiOjE2NTgwNTYwNDl9.T8g5WN6rLbPOSiBtarvpBPlgjQdgBjHOyMwniSe5jV8
