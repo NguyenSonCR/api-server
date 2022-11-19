@@ -29,7 +29,7 @@ const mongoose = require("mongoose");
 const connectDB = async () => {
   try {
     await mongoose.connect(
-      `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@app-sell.dmldskr.mongodb.net/app-sell?retryWrites=true&w=majority`
+      `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.IP_SERVER}/${process.env.DB_NAME}`
     );
     console.log("MongoDB connected");
   } catch (error) {
