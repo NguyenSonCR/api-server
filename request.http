@@ -1,4 +1,4 @@
-POST http://localhost:5000/api/admin/auth/register
+POST http://nhatbinhshop.com:3000/api/admin/auth/register
 Content-Type: application/json
 
 {
