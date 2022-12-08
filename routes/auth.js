@@ -29,14 +29,14 @@ const generateTokens = (payload) => {
     { userId: payload },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "20s",
+      expiresIn: "2h",
     }
   );
 
   const refreshToken = jwt.sign(
     { userId: payload },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "15m" }
+    { expiresIn: "7d" }
   );
 
   return { accessToken, refreshToken };

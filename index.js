@@ -15,7 +15,9 @@ const orderRouter = require("./routes/order");
 const cartRouter = require("./routes/cart");
 const tokenRouter = require("./routes/token");
 const transportRouter = require("./routes/transport");
+const themeRouter = require("./routes/theme");
 const uploadRouter = require("./routes/upload");
+const deleteImageRouter = require("./routes/delete");
 
 // route user
 const userRouter = require("./routes/user/userAuth");
@@ -59,7 +61,9 @@ app.use("/api/admin/order", verifyToken, orderRouter);
 app.use("/api/admin/cart", verifyToken, cartRouter);
 app.use("/api/admin/token", tokenRouter);
 app.use("/api/admin/transport", verifyToken, transportRouter);
+app.use("/api/admin/theme", verifyToken, themeRouter);
 app.use("/api/admin/upload", verifyToken, uploadRouter);
+app.use("/api/admin/image/delete", verifyToken, deleteImageRouter);
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);

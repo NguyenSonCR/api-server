@@ -30,7 +30,7 @@ router.post("/server", upload.single("file"), (req, res) => {
     `./static/img/${newFileName}`,
     () => {}
   );
-  const result = `https://api.nhatbinhshop.com/img/${newFileName}`;
+  const result = `http://localhost:3000/img/${newFileName}`;
   return res.json({ success: true, result });
 });
 
@@ -50,14 +50,10 @@ router.post("/server/multiple", upload.array("files"), async (req, res) => {
         );
 
         if (couter === files.length) {
-          result = result.concat(
-            `https://api.nhatbinhshop.com/img/${newFileName}`
-          );
+          result = result.concat(`http://localhost:3000/img/${newFileName}`);
           return res.status(200).json({ success: true, result });
         } else {
-          result = result.concat(
-            `https://api.nhatbinhshop.com/img/${newFileName}`
-          );
+          result = result.concat(`http://localhost:3000/img/${newFileName}`);
           couter = couter + 1;
         }
       });

@@ -9,13 +9,21 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:5000/api/admin/auth/login
+POST http://localhost:3000/api/admin/auth/login
 Content-Type: application/json
 
 {
     "username": "binh",
     "password": "12345"
 }
+
+
+###
+DELETE  http://localhost:3000/api/admin/image/delete/single
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzMxZDZhYzg2NTgwNzRjNDVkZWEwNDgiLCJpYXQiOjE2NzA0MjI4NjgsImV4cCI6MTY3MDQzMDA2OH0.BXq6jf_Lq_vodwvFYNqzfjhI8Md40YFY4iNVVGbDr8Q
+
+
 
 ###
 

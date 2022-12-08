@@ -1,5 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
 
 const Product = require("../models/Product");
 const Category = require("../models/Category");
@@ -187,8 +189,21 @@ router.delete("/:slug/delete", async (req, res) => {
 // @desc Delete  product
 // @ Access private
 router.delete("/trash/:slug/destroy", async (req, res) => {
+  const slug = req.params.slug;
   try {
-    const productDeleteCondition = { slug: req.params.slug };
+    const product = await Product.findOneDeleted({ slug: slug });
+    const productDeleteCondition = { slug: slug };
+    fs.unlinkSync(`./static${product.img.split(process.env.DOMAIN)[1]}`);
+    let i = 0;
+    await product.imgSlide.map((p) => {
+      if (i === product.imgSlide.length) {
+        fs.unlinkSync(`./static${p.split(process.env.DOMAIN)[1]}`);
+        return;
+      } else {
+        fs.unlinkSync(`./static${p.split(process.env.DOMAIN)[1]}`);
+        i = i + 1;
+      }
+    });
     const deleteProduct = await Product.deleteOne(productDeleteCondition);
     // user not Authori to delete
     if (!deleteProduct)
@@ -457,6 +472,9 @@ router.delete("/category/:id/delete", async (req, res) => {
     const category = await Category.findOne({ _id: req.params.id });
     const productDeleteCondition = { _id: req.params.id };
     const deleteCategory = await Category.deleteOne(productDeleteCondition);
+    const path = `./static${category.img.split(process.env.DOMAIN)[1]}`;
+    fs.unlinkSync(path);
+
     // user not Authori to delete
     if (!deleteCategory)
       return res.status(401).json({
