@@ -14,7 +14,6 @@ router.post("/create", async (req, res) => {
   const {
     name,
     description,
-    productId,
     category,
     categoryChild,
     gender,
@@ -27,18 +26,10 @@ router.post("/create", async (req, res) => {
     bought,
   } = req.body;
 
-  // Simple validation
-  if (!description || !productId || !category)
-    return res.status(400).json({
-      success: false,
-      message: "Description and ProductId is required",
-    });
-
   try {
     const newProduct = new Product({
       name,
       description,
-      productId,
       category,
       categoryChild,
       gender,
@@ -51,16 +42,10 @@ router.post("/create", async (req, res) => {
       bought,
     });
 
-    const product = await Product.findOne({ productId });
-    if (product)
-      return res
-        .status(400)
-        .json({ success: false, message: "Mã sản phẩm đã tồn tại" });
-
     await newProduct.save();
     res.json({
       success: true,
-      message: "Create product successfully!",
+      message: "Thêm mới sản phẩm thành công!",
       product: newProduct,
     });
   } catch (error) {
@@ -78,7 +63,7 @@ router.get("/", async (req, res) => {
     res.json({ success: true, products });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({ success: false, message: "server error" });
   }
 });
 
@@ -91,7 +76,7 @@ router.get("/trash", async (req, res) => {
     res.json({ success: true, products });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({ success: false, message: "server error" });
   }
 });
 
@@ -103,7 +88,6 @@ router.put("/:slug/update", async (req, res) => {
   const {
     name,
     description,
-    productId,
     img,
     imgSlide,
     category,
@@ -116,15 +100,10 @@ router.put("/:slug/update", async (req, res) => {
     bought,
   } = req.body;
 
-  if (!productId)
-    return res
-      .status(400)
-      .json({ success: false, message: "ProductId is required" });
   try {
     let updatedProduct = {
       name,
       description,
-      productId,
       img,
       imgSlide,
       category,
@@ -147,11 +126,11 @@ router.put("/:slug/update", async (req, res) => {
     if (!updatedProduct)
       return res.status(401).json({
         success: false,
-        message: "Product not found or user not authorised",
+        message: "Không tìm thấy sản phẩm",
       });
     res.json({
       success: true,
-      message: "Updated successfully",
+      message: "Cập nhật sản phẩm thành công!",
       product: updatedProduct,
     });
   } catch (error) {
@@ -171,12 +150,12 @@ router.delete("/:slug/delete", async (req, res) => {
     if (!deleteProduct)
       return res.status(401).json({
         success: false,
-        message: "Product not found",
+        message: "Không tìm thấy sản phẩm",
       });
 
     res.json({
       success: true,
-      message: "Product is deleted",
+      message: "Đã xóa sản phẩm thành công!",
       product: deleteProduct,
     });
   } catch (error) {
@@ -193,14 +172,22 @@ router.delete("/trash/:slug/destroy", async (req, res) => {
   try {
     const product = await Product.findOneDeleted({ slug: slug });
     const productDeleteCondition = { slug: slug };
-    fs.unlinkSync(`./static${product.img.split(process.env.DOMAIN)[1]}`);
+    const condition = fs.existsSync(
+      `./static${product.img.split(process.env.DOMAIN)[1]}`
+    );
+    if (condition)
+      fs.unlinkSync(`./static${product.img.split(process.env.DOMAIN)[1]}`);
     let i = 0;
     await product.imgSlide.map((p) => {
       if (i === product.imgSlide.length) {
-        fs.unlinkSync(`./static${p.split(process.env.DOMAIN)[1]}`);
+        const path = `./static${p.split(process.env.DOMAIN)[1]}`;
+        const condition = fs.existsSync(path);
+        if (condition) fs.unlinkSync(path);
         return;
       } else {
-        fs.unlinkSync(`./static${p.split(process.env.DOMAIN)[1]}`);
+        const path = `./static${p.split(process.env.DOMAIN)[1]}`;
+        const condition = fs.existsSync(path);
+        if (condition) fs.unlinkSync(path);
         i = i + 1;
       }
     });
@@ -214,7 +201,7 @@ router.delete("/trash/:slug/destroy", async (req, res) => {
 
     res.json({
       success: true,
-      message: "Product is deleted",
+      message: "Đã xóa sản phẩm thành công!",
       product: deleteProduct,
     });
   } catch (error) {
@@ -239,7 +226,7 @@ router.patch("/trash/:slug/restore", async (req, res) => {
 
     res.json({
       success: true,
-      message: "Product is restore",
+      message: "Đã khôi phục sản phẩm thành công!",
       product: restoreProduct,
     });
   } catch (error) {
@@ -253,9 +240,9 @@ router.patch("/trash/:slug/restore", async (req, res) => {
 // @access private
 
 router.patch("/comment/post", async (req, res) => {
-  const { username, fullName, productId, img, text } = req.body;
+  const { username, fullName, _id, img, text } = req.body;
   try {
-    const product = await Product.findOne({ productId: productId });
+    const product = await Product.findOne({ _id: _id });
     if (!product)
       return res.json({ success: false, message: "Không tìm thấy sản phẩm" });
     const newComment = {
@@ -268,7 +255,7 @@ router.patch("/comment/post", async (req, res) => {
       comment: product.comment.concat(newComment),
     };
     const updatedProduct = await Product.findOneAndUpdate(
-      { productId: productId },
+      { _id: _id },
       updated,
       { new: true }
     );
@@ -288,9 +275,9 @@ router.patch("/comment/post", async (req, res) => {
 // @access private
 
 router.patch("/comment/children/post", async (req, res) => {
-  const { username, fullName, productId, commentId, img, text } = req.body;
+  const { username, fullName, _id, commentId, img, text } = req.body;
   try {
-    const product = await Product.findOne({ productId: productId });
+    const product = await Product.findOne({ _id: _id });
     if (!product)
       return res.json({ success: false, message: "Không tìm thấy sản phẩm" });
     const newCommentChildren = {
@@ -316,7 +303,7 @@ router.patch("/comment/children/post", async (req, res) => {
     };
 
     const updatedProduct = await Product.findOneAndUpdate(
-      { productId: productId },
+      { _id: _id },
       updated,
       { new: true }
     );
@@ -336,9 +323,9 @@ router.patch("/comment/children/post", async (req, res) => {
 // @access private
 
 router.patch("/comment/delete", async (req, res) => {
-  const { productId, comment } = req.body;
+  const { _id, comment } = req.body;
   try {
-    const product = await Product.findOne({ productId: productId });
+    const product = await Product.findOne({ _id: _id });
     if (!product)
       return res.json({ success: false, message: "Không tìm thấy sản phẩm" });
     let updatedComment = product.comment.filter(
@@ -349,7 +336,7 @@ router.patch("/comment/delete", async (req, res) => {
       comment: updatedComment,
     };
     const updatedProduct = await Product.findOneAndUpdate(
-      { productId: productId },
+      { _id: _id },
       updated,
       { new: true }
     );
@@ -364,7 +351,7 @@ router.patch("/comment/delete", async (req, res) => {
   }
 });
 
-// @route GET api/products/addbought/:productId
+// @route GET api/products/addbought/:_id
 // @desc add bought
 // @access private
 
@@ -373,7 +360,7 @@ router.patch("/addbought", (req, res) => {
   checkout.map(async (item) => {
     try {
       const product = await Product.findOne({
-        productId: item.product.productId,
+        _id: item.product._id,
       });
       if (!product)
         return res.json({
@@ -384,13 +371,9 @@ router.patch("/addbought", (req, res) => {
       let updated = {
         bought: product.bought + item.amount,
       };
-      await Product.findOneAndUpdate(
-        { productId: item.product.productId },
-        updated,
-        {
-          new: true,
-        }
-      );
+      await Product.findOneAndUpdate({ _id: item.product._id }, updated, {
+        new: true,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -472,8 +455,10 @@ router.delete("/category/:id/delete", async (req, res) => {
     const category = await Category.findOne({ _id: req.params.id });
     const productDeleteCondition = { _id: req.params.id };
     const deleteCategory = await Category.deleteOne(productDeleteCondition);
+
     const path = `./static${category.img.split(process.env.DOMAIN)[1]}`;
-    fs.unlinkSync(path);
+    const condition = fs.existsSync(path);
+    if (condition) fs.unlinkSync(path);
 
     // user not Authori to delete
     if (!deleteCategory)

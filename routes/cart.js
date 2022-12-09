@@ -48,7 +48,7 @@ router.post("/add", async (req, res) => {
       });
     } else if (cart.products.length > 0) {
       const condition = cart.products.find((cartItem) => {
-        return cartItem.product.productId === product.productId;
+        return cartItem.product._id === product._id;
       });
 
       //   thêm mới sản phẩm cùng loại
@@ -57,7 +57,7 @@ router.post("/add", async (req, res) => {
           return {
             product: cartItem.product,
             amount:
-              cartItem.product.productId === product.productId
+              cartItem.product._id === product._id
                 ? cartItem.amount + 1
                 : cartItem.amount,
           };
@@ -110,7 +110,7 @@ router.put("/remove", async (req, res) => {
     if (listProduct.length > 1) {
       const updatedArray = cart.products.filter((cartItem) => {
         let deleteProduct = listProduct.find((item) => {
-          return item.product.productId === cartItem.product.productId;
+          return item.product._id === cartItem.product._id;
         });
 
         if (deleteProduct) {
@@ -135,7 +135,7 @@ router.put("/remove", async (req, res) => {
       });
     } else {
       const updatedArray = cart.products.filter((cartItem) => {
-        return cartItem.product.productId !== listProduct[0].product.productId;
+        return cartItem.product._id !== listProduct[0].product._id;
       });
       const updated = {
         products: updatedArray,
@@ -166,8 +166,7 @@ router.put("/minus", async (req, res) => {
       return {
         product: cartItem.product,
         amount:
-          cartItem.product.productId === product.productId &&
-          cartItem.amount > 1
+          cartItem.product._id === product._id && cartItem.amount > 1
             ? cartItem.amount - 1
             : cartItem.amount,
       };

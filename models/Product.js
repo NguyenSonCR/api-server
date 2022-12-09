@@ -8,7 +8,6 @@ const ProductSchema = new Schema(
   {
     name: { type: String, default: "", require: true },
     description: { type: String, default: "" },
-    productId: { type: String, default: "", unique: true },
     img: { type: String, default: "" },
     imgSlide: { type: Array, require: true },
     category: { type: String, default: "", require: true },

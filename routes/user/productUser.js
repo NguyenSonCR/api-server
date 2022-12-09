@@ -35,11 +35,11 @@ router.get("/category", async (req, res) => {
 // @access private
 
 router.patch("/comment/post", async (req, res) => {
-  const { username, fullName, productId, img, text, imgsComment } = req.body;
+  const { username, fullName, _id, img, text, imgsComment } = req.body;
   const D = new Date();
   const date = `${D.getDate()}/${D.getMonth() + 1}/${D.getFullYear()}`;
   try {
-    const product = await Product.findOne({ productId: productId });
+    const product = await Product.findOne({ _id: _id });
     if (!product)
       return res.json({ success: false, message: "Không tìm thấy sản phẩm" });
     const newComment = {
@@ -54,7 +54,7 @@ router.patch("/comment/post", async (req, res) => {
       comment: product.comment.concat(newComment),
     };
     const updatedProduct = await Product.findOneAndUpdate(
-      { productId: productId },
+      { _id: _id },
       updated,
       { new: true }
     );
@@ -74,11 +74,11 @@ router.patch("/comment/post", async (req, res) => {
 // @access private
 
 router.patch("/comment/children/post", async (req, res) => {
-  const { username, fullName, productId, commentId, img, text } = req.body;
+  const { username, fullName, _id, commentId, img, text } = req.body;
   const D = new Date();
   const date = `${D.getDate()}/${D.getMonth() + 1}/${D.getFullYear()}`;
   try {
-    const product = await Product.findOne({ productId: productId });
+    const product = await Product.findOne({ _id: _id });
     if (!product)
       return res.json({ success: false, message: "Không tìm thấy sản phẩm" });
     const newCommentChildren = {
@@ -107,7 +107,7 @@ router.patch("/comment/children/post", async (req, res) => {
     };
 
     const updatedProduct = await Product.findOneAndUpdate(
-      { productId: productId },
+      { _id: _id },
       updated,
       { new: true }
     );
